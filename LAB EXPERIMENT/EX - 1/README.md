@@ -10,11 +10,18 @@ Trello
 To Do → In-Progress → Done
 
 ## Sample Tasks
-1. Design Login Page
-2. Create Database
-3. Develop Home Page
-4. Testing Module
-5. Prepare Documentation
+## TO DO
+Collect Project Requirements
+Design UAV System Architecture
+Develop Thermal/Visual Detection
+Create Search Zone Allocation
+Develop Rescue Dashboard
+## IN-PROGRESS
+Implement UAV Mesh Communication
+Develop Video Streaming
+## DONE
+Complete Project Planning
+Define Search & Rescue Workflow
 
 ## Result
 A Kanban Board was successfully created using Trello. The tasks were moved across To Do, In-Progress, and Done columns to simulate the workflow.
