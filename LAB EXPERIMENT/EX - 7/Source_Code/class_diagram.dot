@@ -1,0 +1,17 @@
+digraph Class { rankdir=TB; node [fontname="DejaVu Sans",fontsize=10]; edge [fontname="DejaVu Sans",fontsize=9];
+  Administrator [shape=record,fontname="DejaVu Sans",label="{Administrator|- adminId: int\l- name: String\l|+ assignDuty()\l+ approveLeave()\l}"];
+  SecurityPersonnel [shape=record,fontname="DejaVu Sans",label="{SecurityPersonnel|- personId: int\l- name: String\l- phone: String\l- baseSalary: double\l|+ viewDutySchedule()\l+ applyLeave()\l}"];
+  DutySchedule [shape=record,fontname="DejaVu Sans",label="{DutySchedule|- scheduleId: int\l- date: Date\l- startTime: Time\l- endTime: Time\l|+ assign()\l+ update()\l}"];
+  CampusLocation [shape=record,fontname="DejaVu Sans",label="{CampusLocation|- locationId: int\l- name: String\l|+ getCoverage()\l}"];
+  Leave [shape=record,fontname="DejaVu Sans",label="{Leave|- leaveId: int\l- fromDate: Date\l- toDate: Date\l- status: String\l|+ apply()\l+ approve()\l}"];
+  Attendance [shape=record,fontname="DejaVu Sans",label="{Attendance|- attendanceId: int\l- date: Date\l- present: boolean\l|+ record()\l}"];
+  Salary [shape=record,fontname="DejaVu Sans",label="{Salary|- salaryId: int\l- month: String\l- dutiesDone: int\l- leavesTaken: int\l- amount: double\l|+ calculate()\l+ generateReport()\l}"];
+
+  Administrator -> DutySchedule [label="creates 1..*",arrowhead=none];
+  SecurityPersonnel -> DutySchedule [label="follows 1..*",arrowhead=none];
+  DutySchedule -> CampusLocation [label="at 1",arrowhead=none];
+  SecurityPersonnel -> Leave [label="applies 0..*",arrowhead=none];
+  Administrator -> Leave [label="approves",arrowhead=none];
+  SecurityPersonnel -> Attendance [label="has 0..*",arrowhead=none,arrowtail=diamond,dir=both];
+  SecurityPersonnel -> Salary [label="earns 1..*",arrowhead=none];
+}

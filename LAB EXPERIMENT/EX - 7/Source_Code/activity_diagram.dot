@@ -1,0 +1,7 @@
+digraph Act { rankdir=TB; node [fontname="DejaVu Sans",fontsize=10,shape=box,style="rounded,filled",fillcolor="#e8f5e9"]; edge [fontname="DejaVu Sans",fontsize=9];
+  st [label="",shape=circle,width=0.25,style=filled,fillcolor=black]; en [label="",shape=doublecircle,width=0.25,style=filled,fillcolor=black];
+  a1 [label="Login"]; a2 [label="Assign Duty"]; a3 [label="View Duty Schedule"]; a4 [label="Perform Duty"]; a5 [label="Record Attendance"];
+  d1 [label="Leave\nrequested?",shape=diamond,style=filled,fillcolor="#fff3cd"]; a6 [label="Apply Leave"]; d2 [label="Leave\napproved?",shape=diamond,style=filled,fillcolor="#fff3cd"];
+  a7 [label="Approve Leave"]; a8 [label="Reject Leave"]; a9 [label="Calculate Salary"]; a10 [label="Generate Salary Report"]; a11 [label="Logout"];
+  st->a1->a2->a3->a4->a5->d1; d1->a6 [label="Yes"]; d1->a9 [label="No"]; a6->d2; d2->a7 [label="Yes"]; d2->a8 [label="No"]; a7->a9; a8->a9;
+  a9->a10->a11->en; }
