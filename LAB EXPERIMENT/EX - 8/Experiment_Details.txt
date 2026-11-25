@@ -1,0 +1,99 @@
+EXPERIMENT NUMBER : 8
+EXPERIMENT TITLE  : CYCLOMATIC COMPLEXITY OF A FLOW GRAPH
+TOOLS USED        : Raptor      COURSE OUTCOME: CO1
+
+PROBLEM STATEMENT
+Cyclomatic Complexity in Software Testing is a testing metric used for measuring the
+complexity of a software program. It is a quantitative measure of independent paths in the
+source code of a software program. Cyclomatic complexity can be calculated by using control
+flow graphs or with respect to functions, modules, methods or classes within a software
+program. Cyclomatic complexity for a flow graph G is V(G)=E-N+2. Cyclomatic complexity is
+a software metric (measurement), used to indicate the complexity of a program, Cyclomatic
+complexity = E - N + P where, E = number of edges in the flow graph, N = number of nodes in
+the flow graph, P = number of nodes that have exit points. Find Cyclomatic Complexity for a
+graph having number of edges as 17, number of nodes as 13 and number of predicate nodes in
+the flow graph as 5.
+
+AIM
+To find the cyclomatic complexity of a program whose flow graph has 17 edges, 13 nodes and 5
+predicate nodes, and to verify the result using the alternate formula.
+
+SOFTWARE REQUIREMENTS
+● RAPTOR / any drawing tool for the control flow graph
+● Calculator
+
+PROCEDURE
+Step 1: Read the Problem Statement
+● Read the given control flow graph details carefully.
+● Identify the values provided for the number of edges, nodes, and predicate nodes.
+● Note the given values:
+   ● Number of Edges (E) = 17
+   ● Number of Nodes (N) = 13
+   ● Number of Predicate Nodes (P) = 5
+Step 2: Draw the Control Flow Graph
+● Draw the control flow graph representing the program.
+● Label all the nodes and edges correctly.
+● Identify the predicate (decision) nodes in the graph.
+Step 3: Count the Graph Components
+● Count the total number of nodes in the control flow graph.
+● Count the total number of edges connecting the nodes.
+● Count the number of predicate nodes present in the graph.
+● Verify that the counted values match the given data.
+Step 4: Apply the Cyclomatic Complexity Formula
+● Use the Cyclomatic Complexity formula:
+ V(G) = E − N + 2
+● Substitute the given values:
+ V(G) = 17 − 13 + 2
+Step 5: Calculate the Cyclomatic Complexity
+● Perform the calculation:
+ V(G) = 6
+● Record the calculated Cyclomatic Complexity value.
+Step 6: Verify Using Predicate Nodes
+● Use the alternate formula:
+ V(G) = P + 1
+● Substitute the given value:
+ V(G) = 5 + 1
+● Calculate the result:
+ V(G) = 6
+● Compare the result with the previous calculation.
+Step 7: Analyze the Result
+● Verify that both methods produce the same Cyclomatic Complexity.
+● Conclude that the program contains six independent execution paths.
+Step 8: Interpret the Complexity
+● Determine the testing effort required based on the Cyclomatic Complexity value.
+● Note that a Cyclomatic Complexity of 6 indicates a program with moderate complexity and
+   at least six independent test cases are required for complete basis path testing.
+Step 9: Document the Result
+● Record all calculations neatly.
+● Write the final Cyclomatic Complexity value in the observation section.
+Step 10: Save the Work
+● Verify the calculations once again.
+● Save the document or record the experiment for submission.
+
+SOURCE CODE (files in Source_Code/)
+
+----- cyclomatic_complexity.py -----
+# Experiment 8 - Cyclomatic complexity of a flow graph
+import sys
+E, N, P = (int(x) for x in sys.argv[1:4]) if len(sys.argv) >= 4 else (17, 13, 5)   # edges, nodes, predicate nodes
+
+v1 = E - N + 2          # V(G) = E - N + 2
+v2 = P + 1              # V(G) = P + 1
+print(f"Edges E = {E}, Nodes N = {N}, Predicate nodes P = {P}")
+print(f"Method 1: V(G) = E - N + 2 = {E} - {N} + 2 = {v1}")
+print(f"Method 2: V(G) = P + 1     = {P} + 1 = {v2}")
+print("Both methods agree" if v1 == v2 else "Mismatch - recheck the graph")
+print(f"Independent paths = {v1}  -> at least {v1} test cases needed for basis-path testing")
+
+
+EXPECTED OUTPUT
+● Using V(G) = E − N + 2 = 17 − 13 + 2 = 6
+● Using V(G) = P + 1 = 5 + 1 = 6
+● Both methods give V(G) = 6, so at least six independent test paths are required.
+
+OUTPUT SCREENSHOTS GENERATED
+  Output_01.png - V(G) = 6 by both formulas [Real output captured from an actual run in the build sandbox]
+
+RESULT
+Thus the cyclomatic complexity of the given flow graph was calculated as V(G) = 6 using both
+formulae, indicating six independent paths and moderate complexity.
