@@ -1,0 +1,97 @@
+EXPERIMENT NUMBER : 26
+EXPERIMENT TITLE  : CLONING A GITHUB REPOSITORY AND EDITING FILES LOCALLY
+TOOLS USED        : Git/GitHub      COURSE OUTCOME: CO3
+
+PROBLEM STATEMENT
+Clone an existing GitHub repository to your local machine and make a small change in one of
+the files.
+Tasks:
+● Choose an existing public GitHub repository (e.g., your own or a sample repository).
+● Clone the repository to your local machine using git clone
+● <repository_url>.
+● Navigate into the cloned repository directory and open one of the files.
+● Make a small edit, such as modifying a line of text or fixing a typo.
+● Save your changes.
+
+AIM
+To clone an existing GitHub repository to the local machine, navigate into it, open it in an editor
+and modify a file.
+
+SOFTWARE REQUIREMENTS
+● Git (Git Bash)
+● GitHub
+● Visual Studio Code
+
+PROCEDURE
+Step 1: Select a GitHub Repository
+● Open the GitHub website and sign in to your account.
+● Select an existing public repository (either your own repository or any public sample
+   repository).
+● Copy the HTTPS URL of the selected repository using the Code button.
+Step 2: Clone the Repository
+● Open Git Bash or the terminal on your local machine.
+● Clone the selected repository using the git clone command.
+● Wait until the cloning process completes successfully.
+● Verify that the repository has been downloaded to the local system.
+ git clone <repository_url>
+Step 3: Navigate to the Repository Directory
+● Move into the cloned repository using the cd command.
+● Verify that the repository files are available by listing the directory contents.
+ cd <repository_name>
+Step 4: Open the Repository and Modify the File
+● Open the cloned repository in Visual Studio Code or any preferred code editor.
+● Locate the file that needs to be modified, such as README.md or any source code file.
+ code .
+● Open the selected file.
+● Make a small modification, such as updating a line of text, correcting a spelling mistake, or
+   adding a short description.
+● Save the modified file.
+Step 5: Verify the Changes
+● Return to Git Bash or the terminal.
+● Check the repository status using the git status command.
+● Verify that the modified file is displayed as changed.
+ git status
+Step 6: Save the Updated File
+● Ensure that all modifications have been saved successfully.
+● Verify that the edited file is present in the local repository.
+
+SOURCE CODE (files in Source_Code/)
+
+----- clone_and_edit_demo.sh -----
+#!/usr/bin/env bash
+# Experiment 26 - clone a repository and edit a file locally
+# Runs the whole workflow on your machine. A local bare repository (origin.git) plays the role of GitHub,
+# so no account or internet is needed. For the REAL GitHub steps follow the Procedure in Experiment_Details.txt.
+set -e
+W=$(mktemp -d); cd "$W"
+export GIT_AUTHOR_NAME="Student" GIT_AUTHOR_EMAIL="student@example.com" GIT_COMMITTER_NAME="Student" GIT_COMMITTER_EMAIL="student@example.com"
+export GIT_MERGE_AUTOEDIT=no GIT_EDITOR=true
+git config --global init.defaultBranch main 2>/dev/null || true
+git init -q --bare -b main origin.git
+git clone -q origin.git seed 2>/dev/null; cd seed; git checkout -q -b main 2>/dev/null || true
+printf '# My-Personal-Project\n\nInitial README created on GitHub.\n' > README.md
+git add README.md; git commit -q -m "Initial commit"; git push -q origin main; cd ..; rm -rf seed
+show() { echo; local s="\$"; for a in "$@"; do case "$a" in *\ *) s="$s '$a'";; *) s="$s $a";; esac; done; echo "$s"; "$@" 2>&1; }
+
+show git clone origin.git My-Personal-Project
+cd My-Personal-Project
+show ls
+sed -i 's/Initial README created on GitHub./README edited locally after cloning./' README.md
+show cat README.md
+show git status
+show git diff
+
+echo; echo "Workspace: $W"
+
+
+EXPECTED OUTPUT
+● git clone reports “Cloning into 'My-Personal-Project'… done.”
+● ls lists the repository files; README.md opens in VS Code.
+● After editing and saving, git status shows modified: README.md.
+
+OUTPUT SCREENSHOTS GENERATED
+  Output_01.png - Git workflow output (part 1 of 1) [Real output captured from an actual run in the build sandbox (local bare repository stands in for GitHub)]
+
+RESULT
+Thus an existing GitHub repository was cloned to the local machine and a file was opened and
+modified successfully.
