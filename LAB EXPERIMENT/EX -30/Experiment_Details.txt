@@ -1,0 +1,136 @@
+EXPERIMENT NUMBER : 30
+EXPERIMENT TITLE  : FORKING, FEATURE BRANCH AND PULL REQUEST TO THE ORIGINAL REPOSITORY
+TOOLS USED        : Git/GitHub      COURSE OUTCOME: CO4
+
+PROBLEM STATEMENT
+You and your team are working on a project. One team member adds a new feature to the
+project. You need to fetch the latest changes, create a new branch, and implement your feature
+without affecting the existing code.
+Tasks:
+● Fork a repository (you can use an existing repository or a partner’s repository).
+● Clone the repository to your local machine.
+● Create a new branch for your feature.
+● Implement your changes and push them to your forked repository.
+● Submit a pull request to the original repository.
+
+AIM
+To fork a team member’s repository, clone it, create a feature branch, implement a feature
+without affecting existing code, push it to the fork and submit a pull request to the original
+repository.
+
+SOFTWARE REQUIREMENTS
+● Git (Git Bash)
+● GitHub
+● Visual Studio Code
+
+PROCEDURE
+Step 1: Fork the Repository
+● Open the original GitHub repository in a web browser.
+● Sign in to your GitHub account.
+● Click the Fork button.
+● Select your GitHub account as the owner of the fork.
+● Enter a suitable repository name if required.
+● Click Create fork.
+● Verify that the forked repository is available in your GitHub account.
+Step 2: Clone the Forked Repository
+● Open Git Bash on the local machine.
+● Navigate to the folder where the project needs to be stored.
+● Copy the HTTPS URL of the forked repository from the Code button.
+● Clone the repository using the git clone command.
+ git clone <forked_repository_url>
+● Navigate into the cloned repository.
+ cd <repository_name>
+● List the files to verify that the repository was cloned successfully.
+ ls
+Step 3: Create a Feature Branch
+● Create a separate branch for implementing the new feature.
+● Switch to the newly created branch.
+ git checkout -b feature-update
+● Verify that the feature branch is active.
+ git branch
+Step 4: Implement the Feature
+● Open the project in Visual Studio Code or another code editor.
+ code .
+● Select the appropriate project file.
+● Add or modify the required feature without changing unrelated parts of the project.
+● Save all changes.
+Step 5: Verify the Changes
+● Return to Git Bash.
+● Check the repository status.
+ git status
+● Verify that the modified or newly created files are displayed.
+Step 6: Stage and Commit the Changes
+● Add the modified files to the staging area.
+ git add .
+● Commit the changes with a meaningful commit message.
+ git commit -m "Added new feature"
+Step 7: Push the Feature Branch
+● Push the feature branch to your forked GitHub repository.
+ git push -u origin feature-update
+● Verify that the feature-update branch is available in your forked repository.
+Step 8: Create a Pull Request
+● Open your forked repository on GitHub.
+● Click Compare & pull request or open Pull requests → New pull request.
+● Set the original repository as the base repository.
+● Select the main branch as the base branch.
+● Select your forked repository and feature-update as the compare branch.
+● Enter a suitable title and description for the pull request.
+● Click Create pull request.
+Step 9: Verify the Pull Request
+● Open the Pull Request page.
+● Verify that the feature changes are displayed correctly.
+● Check that the Pull Request is directed from your fork to the original repository.
+● Submit the Pull Request for review.
+
+SOURCE CODE (files in Source_Code/)
+
+----- fork_feature_pr_demo.sh -----
+#!/usr/bin/env bash
+# Experiment 30 - fork, feature branch and pull request
+# Runs the whole workflow on your machine. A local bare repository (origin.git) plays the role of GitHub,
+# so no account or internet is needed. For the REAL GitHub steps follow the Procedure in Experiment_Details.txt.
+set -e
+W=$(mktemp -d); cd "$W"
+export GIT_AUTHOR_NAME="Student" GIT_AUTHOR_EMAIL="student@example.com" GIT_COMMITTER_NAME="Student" GIT_COMMITTER_EMAIL="student@example.com"
+export GIT_MERGE_AUTOEDIT=no GIT_EDITOR=true
+git config --global init.defaultBranch main 2>/dev/null || true
+git init -q --bare -b main origin.git
+git clone -q origin.git seed 2>/dev/null; cd seed; git checkout -q -b main 2>/dev/null || true
+printf '# My-Personal-Project\n\nInitial README created on GitHub.\n' > README.md
+git add README.md; git commit -q -m "Initial commit"; git push -q origin main; cd ..; rm -rf seed
+show() { echo; local s="\$"; for a in "$@"; do case "$a" in *\ *) s="$s '$a'";; *) s="$s $a";; esac; done; echo "$s"; "$@" 2>&1; }
+
+# stand-in project file (the real experiment uses the partner's repository)
+git clone -q origin.git seed2; ( cd seed2; printf 'print("Simple Python Project")\n' > ytDownloader.py; git add .; git commit -q -m "Add project file"; git push -q origin main )
+git clone -q --bare origin.git fork.git
+show git clone fork.git 3-Simple-Python-Projects
+cd 3-Simple-Python-Projects
+show ls
+show git checkout -b feature-update
+show git branch
+printf 'def project_info():\n    print("Project: 3 Simple Python Projects - info feature")\n\nproject_info()\n' >> ytDownloader.py
+show git status --short
+show git add .
+show git commit -m "Added project info feature"
+show git push -u origin feature-update
+show python3 ytDownloader.py
+echo "--- Next: open a Pull Request from <your-fork>:feature-update to <original>:main on GitHub ---"
+show git log --oneline --all --graph
+
+echo; echo "Workspace: $W"
+
+
+EXPECTED OUTPUT
+● Fork of 3-Simple-Python-Projects created and cloned.
+● Branch feature-update created; ytDownloader.py modified, committed (“Added project info
+   feature”) and pushed.
+● Pull request from the fork’s feature-update branch to the original repository’s main branch is
+   opened.
+
+OUTPUT SCREENSHOTS GENERATED
+  Output_01.png - Git workflow output (part 1 of 2) [Real output captured from an actual run in the build sandbox (local bare repository stands in for GitHub)]
+  Output_02.png - Git workflow output (part 2 of 2) [Real output captured from an actual run in the build sandbox (local bare repository stands in for GitHub)]
+
+RESULT
+Thus the repository was forked and cloned, a feature was implemented on a separate branch,
+pushed to the fork and a pull request was submitted to the original repository.
