@@ -1,0 +1,246 @@
+EXPERIMENT NUMBER : 24
+EXPERIMENT TITLE  : CI/CD PIPELINE FOR A FLASK APPLICATION USING GITHUB ACTIONS WITH CLOUD DEPLOYMENT
+TOOLS USED        : GitHub Actions, Docker      COURSE OUTCOME: CO3
+
+PROBLEM STATEMENT
+Create a CI/CD Pipeline Using GitHub Actions
+Tasks:
+● Set up a GitHub repository for a containerized Flask application.
+● Define a GitHub Actions workflow file to automate testing and deployment.
+● Add steps to build, test, and push Docker images to Docker Hub.
+● Deploy the application to a cloud platform (Heroku/AWS).
+● Submit the workflow file and deployment link.
+
+AIM
+To create a CI/CD pipeline with GitHub Actions for a containerized Flask application that
+automatically tests the code, builds and pushes the Docker image to Docker Hub and deploys the
+application to a cloud platform (Heroku / AWS).
+
+SOFTWARE REQUIREMENTS
+● GitHub and GitHub Actions
+● Python 3, Flask, pytest
+● Docker and Docker Hub
+● Heroku account (or AWS / Render)
+
+PROCEDURE
+Step 1: Set Up the Repository and Flask Application
+● Create a GitHub repository flask-cicd-actions with the following files.
+app.py
+ from flask import Flask, jsonify
+ import os
+ app = Flask(__name__)
+ @app.route("/")
+ def home():
+      return jsonify(message="Flask CI/CD with GitHub Actions", status="running")
+ @app.route("/add/<int:a>/<int:b>")
+ def add(a, b):
+      return jsonify(result=a + b)
+ if __name__ == "__main__":
+      app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+test_app.py
+ from app import app
+ client = app.test_client()
+ def test_home():
+      r = client.get("/")
+      assert r.status_code == 200
+      assert r.get_json()["status"] == "running"
+ def test_add():
+      r = client.get("/add/2/3")
+      assert r.get_json()["result"] == 5
+requirements.txt
+ flask==3.0.3
+ gunicorn==22.0.0
+ pytest==8.2.0
+Dockerfile
+ FROM python:3.11-slim
+ WORKDIR /app
+ COPY requirements.txt .
+ RUN pip install --no-cache-dir -r requirements.txt
+ COPY . .
+ ENV PORT=5000
+ EXPOSE 5000
+ CMD gunicorn -b 0.0.0.0:$PORT app:app
+● Run the tests locally once: pip install -r requirements.txt && pytest -q
+Step 2: Create the Cloud Application and Secrets
+● Heroku: create an app (Dashboard → New → Create new app, e.g. flask-cicd-<rollno>) and
+   copy the API key from Account settings.
+● (Heroku requires a verified/paid account; AWS App Runner or Render can be used as
+   alternatives.)
+● In GitHub → Settings → Secrets and variables → Actions add:
+   DOCKERHUB_USERNAME, DOCKERHUB_TOKEN, HEROKU_API_KEY,
+   HEROKU_APP_NAME.
+Step 3: Define the GitHub Actions Workflow
+● Create .github/workflows/ci-cd.yml:
+.github/workflows/ci-cd.yml
+  name: Flask CI/CD
+  on:
+     push:
+       branches: [ "main" ]
+     pull_request:
+       branches: [ "main" ]
+  jobs:
+     test:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - uses: actions/setup-python@v5
+            with:
+              python-version: "3.11"
+         - name: Install dependencies
+            run: pip install -r requirements.txt
+         - name: Run unit tests
+            run: pytest -v
+     build-and-push:
+       needs: test
+       if: github.event_name == 'push'
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - uses: docker/login-action@v3
+            with:
+              username: ${{ secrets.DOCKERHUB_USERNAME }}
+              password: ${{ secrets.DOCKERHUB_TOKEN }}
+         - uses: docker/build-push-action@v6
+            with:
+              context: .
+              push: true
+              tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-cicd:latest
+     deploy:
+       needs: build-and-push
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - name: Deploy container to Heroku
+         env:
+           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+         run: |
+           heroku container:login
+           heroku container:push web -a ${{ secrets.HEROKU_APP_NAME }}
+           heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
+Step 4: Push the Code and Trigger the Pipeline
+ git add .
+ git commit -m "Add Flask app with CI/CD workflow"
+ git push origin main
+● Open the Actions tab – jobs test, build-and-push and deploy run one after another.
+Step 5: Verify Testing, Image and Deployment
+● Open the test job log – pytest shows 2 passed.
+● Docker Hub shows <dockerhub-username>/flask-cicd:latest.
+● Open https://<app-name>.herokuapp.com – the JSON message “Flask CI/CD with GitHub
+   Actions” is displayed; /add/2/3 returns 5.
+Step 6: Test the Pipeline with a Failing and a Passing Change
+● Change the add route to return a - b and push – the test job fails and build/deploy are
+   skipped, protecting production.
+● Fix the code and push again – the full pipeline succeeds and the new version is deployed.
+● Submit the workflow file and the deployment link.
+
+SOURCE CODE (files in Source_Code/)
+
+----- Dockerfile -----
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+ENV PORT=5000
+EXPOSE 5000
+CMD gunicorn -b 0.0.0.0:$PORT app:app
+
+
+----- app.py -----
+from flask import Flask, jsonify
+import os
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return jsonify(message="Flask CI/CD with GitHub Actions", status="running")
+
+@app.route("/add/<int:a>/<int:b>")
+def add(a, b):
+    return jsonify(result=a + b)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+
+----- requirements.txt -----
+flask==3.0.3
+gunicorn==22.0.0
+pytest==8.2.0
+
+
+----- test_app.py -----
+from app import app
+client = app.test_client()
+
+def test_home():
+    r = client.get("/")
+    assert r.status_code == 200
+    assert r.get_json()["status"] == "running"
+
+def test_add():
+    r = client.get("/add/2/3")
+    assert r.get_json()["result"] == 5
+
+
+----- .github/workflows/ci-cd.yml -----
+name: Flask CI/CD
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run unit tests
+        run: pytest -v
+  build-and-push:
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-cicd:latest
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy container to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku container:login
+          heroku container:push web -a ${{ secrets.HEROKU_APP_NAME }}
+          heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
+
+
+EXPECTED OUTPUT
+● Actions run shows jobs test → build-and-push → deploy completed successfully.
+● pytest reports 2 passed.
+● Docker Hub shows the new image; the deployment link (e.g.
+   https://<app-name>.herokuapp.com) displays the Flask application.
+
+OUTPUT SCREENSHOTS GENERATED
+  Output_01.png - pytest reports 2 passed (the CI 'test' job command) [Real output from running the application locally with Python in the build sandbox (Docker/Kubernetes/cloud not available there)]
+  Output_02.png - Workflow file parses correctly [Real YAML syntax validation; the workflow was NOT run on GitHub here]
+
+RESULT
+Thus a CI/CD pipeline was created with GitHub Actions that tests, builds and pushes the Docker
+image of the Flask application and deploys it to the cloud automatically.
