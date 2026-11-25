@@ -1,0 +1,4 @@
+Confluence page title : Library Management System Project Overview
+Insert with /jira -> Jira Issues macro, columns: Key, Summary, Assignee, Priority, Status
+JQL used in the macro : project = LMS ORDER BY created ASC
+Progress (completed / total) : 2 / 5 issues Done = 40 %   (update when statuses change)

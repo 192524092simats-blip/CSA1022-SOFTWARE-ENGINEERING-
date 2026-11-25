@@ -1,0 +1,105 @@
+EXPERIMENT NUMBER : 11
+EXPERIMENT TITLE  : LINKING JIRA ISSUES WITH CONFLUENCE FOR PROGRESS TRACKING
+TOOLS USED        : Jira & Confluence      COURSE OUTCOME: CO2
+
+PROBLEM STATEMENT
+Link Jira tasks with Confluence to streamline task tracking and progress monitoring for the
+Library Management System development. Create a new page in Confluence titled "Library
+Management System Project Overview." Embed at least 5 Jira issues related to the development
+of the Library Management System (e.g., tasks from the sprint like "Develop book search
+functionality," "Create user login page," etc.). Use the Jira macro to display issues with status
+(e.g., "To Do," "In Progress," "Done"). Add a progress bar in the Confluence page to visually
+track the completion of each embedded Jira task (e.g., percentage of tasks completed in the
+sprint). Submit a screenshot of the Confluence page showing the embedded Jira tasks and the
+progress bar.
+
+AIM
+To link Jira tasks of a Library Management System with a Confluence page, embed at least five
+Jira issues using the Jira macro with their status, and add a progress bar to track completion.
+
+SOFTWARE REQUIREMENTS
+● Jira Software (Cloud)
+● Confluence (Cloud)
+● Web browser
+
+PROCEDURE
+Step 1: Login
+● Open a web browser and navigate to the Jira website.
+● Login - https://id.atlassian.com/login
+● Sign in to your Jira account using your registered email address and password.
+● After successful authentication, access the Jira dashboard to begin the project creation
+   process.
+Step 2: Create Jira Issues
+● Open the Jira project related to the Library Management System.
+● Create the following development tasks:
+   ● Develop Book Search Functionality
+   ● Create User Login Page
+   ● Implement Book Borrowing Module
+   ● Design Admin Dashboard
+   ● Test Library Management System
+● Verify that all five issues are successfully created in Jira.
+Step 3: Verify the Issues and Connect Confluence
+● Open the Library Management System project and view the created issues in the List / Board
+   view.
+● Set the workflow status of the issues (To Do, In Progress, Done) to reflect the current
+   progress.
+● From the project sidebar open Pages and connect the project to a Confluence space (or open
+   Confluence from the app switcher).
+● Verify that the Confluence space is available for creating project documentation.
+Step 4: Create a New Confluence Page
+● Click the Create button to create a new page.
+● Enter the page title as Library Management System Project Overview.
+● Add a brief description explaining the objectives and development progress of the Library
+   Management System.
+● Save the page.
+● Verify that all embedded Jira issues are displayed correctly.
+Step 5: Display Task Status
+● Configure the Jira macro to display the workflow status of each task.
+● Ensure that the task statuses are visible as To Do, In Progress, or Done.
+● Verify that the status of each embedded issue is updated automatically based on Jira.
+Step 6: Embed Jira Issues in Confluence
+● Return to the Library Management System Project Overview page in Confluence.
+● Type /jira and select the Jira macro.
+● Search for the required Jira issues and insert them into the page.
+● Configure the macro to display the issue details, including Issue Key, Summary, Assignee,
+   Priority, and Status.
+Step 7: Submit the Output
+● Review the Confluence page to ensure that all Jira issues are embedded successfully.
+● Verify that the progress bar and task statuses are visible.
+● Capture a screenshot of the completed Confluence page showing the embedded Jira tasks
+   and the progress bar. https://saveetha-team-w7mk9z6h.atlassian.net/wiki/x/AYBN
+● Submit the screenshot as the final output.
+
+SOURCE CODE (files in Source_Code/)
+
+----- confluence_jira_macro.txt -----
+Confluence page title : Library Management System Project Overview
+Insert with /jira -> Jira Issues macro, columns: Key, Summary, Assignee, Priority, Status
+JQL used in the macro : project = LMS ORDER BY created ASC
+Progress (completed / total) : 2 / 5 issues Done = 40 %   (update when statuses change)
+
+
+----- lms_issues.csv -----
+Summary,Issue Type,Status
+Develop Book Search Functionality,Task,Done
+Create User Login Page,Task,Done
+Implement Book Borrowing Module,Task,In Progress
+Design Admin Dashboard,Task,To Do
+Test Library Management System,Task,To Do
+
+
+EXPECTED OUTPUT
+● Five Jira issues for the Library Management System (Develop Book Search Functionality,
+   Create User Login Page, Implement Book Borrowing Module, Design Admin Dashboard,
+   Test Library Management System).
+● A Confluence page “Library Management System Project Overview” with the embedded
+   Jira issue table showing Key, Summary, Assignee, Priority and Status, and a progress bar.
+● Confluence page link: https://saveetha-team-w7mk9z6h.atlassian.net/wiki/x/AYBN
+
+OUTPUT SCREENSHOTS GENERATED
+  (none generated - see Output_Screenshots/CAPTURE_CHECKLIST.md)
+
+RESULT
+Thus Jira tasks were linked with a Confluence page, the issues were embedded with their live
+status and a progress bar, and task tracking for the Library Management System was
+streamlined.
