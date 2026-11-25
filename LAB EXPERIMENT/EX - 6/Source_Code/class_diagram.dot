@@ -1,0 +1,19 @@
+digraph Class { rankdir=TB; node [fontname="DejaVu Sans",fontsize=10]; edge [fontname="DejaVu Sans",fontsize=9];
+  Customer [shape=record,fontname="DejaVu Sans",label="{Customer|- customerId: int\l- name: String\l- address: String\l- phone: String\l|+ browseRestaurants()\l+ placeOrder()\l+ trackOrder()\l}"];
+  Restaurant [shape=record,fontname="DejaVu Sans",label="{Restaurant|- restaurantId: int\l- name: String\l- location: String\l|+ manageMenu()\l+ updateOrderStatus()\l}"];
+  Menu [shape=record,fontname="DejaVu Sans",label="{Menu|- menuId: int\l|+ addItem()\l+ removeItem()\l}"];
+  FoodItem [shape=record,fontname="DejaVu Sans",label="{FoodItem|- itemId: int\l- name: String\l- price: double\l|+ updatePrice()\l}"];
+  Order [shape=record,fontname="DejaVu Sans",label="{Order|- orderId: int\l- date: Date\l- status: String\l- total: double\l|+ calculateTotal()\l+ updateStatus()\l}"];
+  Payment [shape=record,fontname="DejaVu Sans",label="{Payment|- paymentId: int\l- amount: double\l- mode: String\l- status: String\l|+ makePayment()\l+ verifyPayment()\l}"];
+  DeliveryAgent [shape=record,fontname="DejaVu Sans",label="{DeliveryAgent|- agentId: int\l- name: String\l- phone: String\l|+ acceptRequest()\l+ updateDeliveryStatus()\l}"];
+  Delivery [shape=record,fontname="DejaVu Sans",label="{Delivery|- deliveryId: int\l- status: String\l- time: Time\l|+ assignAgent()\l+ trackLocation()\l}"];
+
+  Customer -> Order [label="places 1..*",arrowhead=none];
+  Restaurant -> Order [label="receives 1..*",arrowhead=none];
+  Restaurant -> Menu [label="1",arrowhead=none,arrowtail=diamond,dir=both];
+  Menu -> FoodItem [label="1..*",arrowhead=none,arrowtail=diamond,dir=both];
+  Order -> FoodItem [label="contains 1..*",arrowhead=none,arrowtail=odiamond,dir=both];
+  Order -> Payment [label="paid by 1",arrowhead=none];
+  Order -> Delivery [label="has 1",arrowhead=none];
+  DeliveryAgent -> Delivery [label="handles 0..*",arrowhead=none];
+}

@@ -1,0 +1,138 @@
+EXPERIMENT NUMBER : 6
+EXPERIMENT TITLE  : UML CLASS, USE CASE AND ACTIVITY DIAGRAMS FOR AN ONLINE FOOD DELIVERY SYSTEM
+TOOLS USED        : Umbrello      COURSE OUTCOME: CO1
+
+PROBLEM STATEMENT
+An online food delivery platform enables customers to browse restaurants, view menus, place
+food orders, make online payments, and track delivery status. Restaurants use the system to
+manage their menus and update order status, while delivery agents are responsible for accepting
+delivery requests and updating delivery progress. Design a Class Diagram, Use case Diagram
+and Activity Diagram for the Online Food Delivery System showing the relevant classes, their
+attributes, methods, and relationships.
+
+AIM
+To design the Class diagram, Use Case diagram and Activity diagram for an Online Food
+Delivery System showing the relevant classes, attributes, methods, actors and workflow.
+
+SOFTWARE REQUIREMENTS
+● Umbrello UML Modeller / StarUML
+● Windows / Linux PC
+
+PROCEDURE
+Step 1: Launch the UML Modeling Tool
+● Open StarUML or any UML modeling software.
+● Create a new project.
+● Save the project with the name "Online Food Delivery System."
+Step 2: Analyze the Problem Statement
+● Read the given problem carefully.
+● Identify the main functionalities of the system.
+● List the actors, classes, and activities required for the system.
+● Plan the diagrams before creating them.
+Step 3: Create the Class Diagram
+● Add a new Class Diagram to the project.
+● Create the required classes such as Customer, Restaurant, Menu, Food Item, Order, Payment,
+   Delivery Agent, and Delivery.
+● Add suitable attributes for each class.
+● Add appropriate methods for each class.
+● Connect the classes using suitable relationships such as association, aggregation,
+   composition, and inheritance.
+● Verify that the relationships correctly represent the system.
+Step 4: Create the Use Case Diagram
+● Add a new Use Case Diagram.
+● Create the actors such as Customer, Restaurant, Delivery Agent, and Administrator.
+● Add the use cases including Browse Restaurants, View Menu, Place Order, Make Payment,
+   Track Order, Manage Menu, Update Order Status, Accept Delivery Request, and Update
+   Delivery Status.
+● Connect each actor with the corresponding use cases using association relationships.
+Step 5: Create the Activity Diagram
+● Add a new Activity Diagram.
+● Insert the Initial Node to represent the start of the process.
+● Create the activities in sequence, including browsing restaurants, selecting food items,
+   placing an order, making payment, restaurant confirmation, assigning a delivery agent,
+   tracking delivery, and completing the order.
+● Use decision nodes wherever conditions are required.
+● Connect all activities using control flow arrows.
+● End the process using the Final Node.
+Step 6: Verify the Class Diagram
+● Check whether all classes contain the required attributes and methods.
+● Ensure that all relationships are connected correctly.
+● Verify that the diagram satisfies the given requirements.
+Step 7: Verify the Use Case Diagram
+● Ensure that all actors are connected to the appropriate use cases.
+● Verify that all system functionalities are included.
+● Check the correctness of the associations.
+Step 8: Verify the Activity Diagram
+● Review the sequence of activities.
+● Check the decision points and control flow.
+● Ensure that the workflow represents the food delivery process correctly.
+Step 9: Save the UML Project
+● Save all the diagrams in the project.
+● Store the project with an appropriate file name.
+Step 10: Export the Diagrams
+● Export the Class Diagram, Use Case Diagram, and Activity Diagram as image or PDF files.
+● Verify that all diagrams are complete and ready for submission.
+
+SOURCE CODE (files in Source_Code/)
+
+----- activity_diagram.dot -----
+digraph Act { rankdir=TB; node [fontname="DejaVu Sans",fontsize=10,shape=box,style="rounded,filled",fillcolor="#e8f5e9"]; edge [fontname="DejaVu Sans",fontsize=9];
+  st [label="",shape=circle,width=0.25,style=filled,fillcolor=black]; en [label="",shape=doublecircle,width=0.25,style=filled,fillcolor=black];
+  a1 [label="Browse Restaurants"]; a2 [label="Select Food Items"]; a3 [label="Place Order"]; a4 [label="Make Payment"];
+  d1 [label="Payment\nsuccessful?",shape=diamond,style=filled,fillcolor="#fff3cd"]; f [label="Show Payment Failed"];
+  a5 [label="Restaurant Confirms Order"]; a6 [label="Assign Delivery Agent"]; a7 [label="Track Delivery"]; a8 [label="Complete Order"];
+  st->a1->a2->a3->a4->d1; d1->f [label="No"]; f->a4 [label="retry"]; d1->a5 [label="Yes"]; a5->a6->a7->a8->en; }
+
+
+----- class_diagram.dot -----
+digraph Class { rankdir=TB; node [fontname="DejaVu Sans",fontsize=10]; edge [fontname="DejaVu Sans",fontsize=9];
+  Customer [shape=record,fontname="DejaVu Sans",label="{Customer|- customerId: int\l- name: String\l- address: String\l- phone: String\l|+ browseRestaurants()\l+ placeOrder()\l+ trackOrder()\l}"];
+  Restaurant [shape=record,fontname="DejaVu Sans",label="{Restaurant|- restaurantId: int\l- name: String\l- location: String\l|+ manageMenu()\l+ updateOrderStatus()\l}"];
+  Menu [shape=record,fontname="DejaVu Sans",label="{Menu|- menuId: int\l|+ addItem()\l+ removeItem()\l}"];
+  FoodItem [shape=record,fontname="DejaVu Sans",label="{FoodItem|- itemId: int\l- name: String\l- price: double\l|+ updatePrice()\l}"];
+  Order [shape=record,fontname="DejaVu Sans",label="{Order|- orderId: int\l- date: Date\l- status: String\l- total: double\l|+ calculateTotal()\l+ updateStatus()\l}"];
+  Payment [shape=record,fontname="DejaVu Sans",label="{Payment|- paymentId: int\l- amount: double\l- mode: String\l- status: String\l|+ makePayment()\l+ verifyPayment()\l}"];
+  DeliveryAgent [shape=record,fontname="DejaVu Sans",label="{DeliveryAgent|- agentId: int\l- name: String\l- phone: String\l|+ acceptRequest()\l+ updateDeliveryStatus()\l}"];
+  Delivery [shape=record,fontname="DejaVu Sans",label="{Delivery|- deliveryId: int\l- status: String\l- time: Time\l|+ assignAgent()\l+ trackLocation()\l}"];
+
+  Customer -> Order [label="places 1..*",arrowhead=none];
+  Restaurant -> Order [label="receives 1..*",arrowhead=none];
+  Restaurant -> Menu [label="1",arrowhead=none,arrowtail=diamond,dir=both];
+  Menu -> FoodItem [label="1..*",arrowhead=none,arrowtail=diamond,dir=both];
+  Order -> FoodItem [label="contains 1..*",arrowhead=none,arrowtail=odiamond,dir=both];
+  Order -> Payment [label="paid by 1",arrowhead=none];
+  Order -> Delivery [label="has 1",arrowhead=none];
+  DeliveryAgent -> Delivery [label="handles 0..*",arrowhead=none];
+}
+
+
+----- usecase_diagram.dot -----
+digraph UC { rankdir=LR; node [fontname="DejaVu Sans",fontsize=10];
+  node [shape=box,style=filled,fillcolor="#fff3cd"]; Customer; Restaurant; "Delivery Agent"; Administrator;
+  subgraph cluster_s { label="Online Food Delivery System"; style=rounded; node [shape=ellipse,style=filled,fillcolor="#e3f2fd"];
+    uc1 [label="Browse Restaurants"]; uc2 [label="View Menu"]; uc3 [label="Place Order"]; uc4 [label="Make Payment"];
+    uc5 [label="Track Order"]; uc6 [label="Manage Menu"]; uc7 [label="Update Order Status"];
+    uc8 [label="Accept Delivery Request"]; uc9 [label="Update Delivery Status"]; }
+  edge [arrowhead=none];
+  Customer -> uc1; Customer -> uc2; Customer -> uc3; Customer -> uc4; Customer -> uc5;
+  Restaurant -> uc6; Restaurant -> uc7; "Delivery Agent" -> uc8; "Delivery Agent" -> uc9;
+  Administrator -> uc6; Administrator -> uc1;
+}
+
+
+EXPECTED OUTPUT
+● Class diagram with classes Customer, Restaurant, Menu, FoodItem, Order, Payment,
+   DeliveryAgent, Delivery and their relationships.
+● Use Case diagram with actors Customer, Restaurant, Delivery Agent, Administrator and use
+   cases such as Browse Restaurants, Place Order, Make Payment, Track Order, Manage Menu,
+   Accept Delivery.
+● Activity diagram from browsing restaurants to order completion with decision nodes for
+   payment success.
+
+OUTPUT SCREENSHOTS GENERATED
+  Output_01.png - Class diagram - Online Food Delivery System [Diagram rendered with Graphviz from the .dot source (not an Umbrello window)]
+  Output_02.png - Use Case diagram - Online Food Delivery System [Diagram rendered with Graphviz from the .dot source (not an Umbrello window)]
+  Output_03.png - Activity diagram - Online Food Delivery System [Diagram rendered with Graphviz from the .dot source (not an Umbrello window)]
+
+RESULT
+Thus the Class, Use Case and Activity diagrams for the Online Food Delivery System were
+designed using the UML tool and verified successfully.

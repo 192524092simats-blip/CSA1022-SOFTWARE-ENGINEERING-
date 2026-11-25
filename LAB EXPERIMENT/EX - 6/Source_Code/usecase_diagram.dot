@@ -1,0 +1,11 @@
+digraph UC { rankdir=LR; node [fontname="DejaVu Sans",fontsize=10];
+  node [shape=box,style=filled,fillcolor="#fff3cd"]; Customer; Restaurant; "Delivery Agent"; Administrator;
+  subgraph cluster_s { label="Online Food Delivery System"; style=rounded; node [shape=ellipse,style=filled,fillcolor="#e3f2fd"];
+    uc1 [label="Browse Restaurants"]; uc2 [label="View Menu"]; uc3 [label="Place Order"]; uc4 [label="Make Payment"];
+    uc5 [label="Track Order"]; uc6 [label="Manage Menu"]; uc7 [label="Update Order Status"];
+    uc8 [label="Accept Delivery Request"]; uc9 [label="Update Delivery Status"]; }
+  edge [arrowhead=none];
+  Customer -> uc1; Customer -> uc2; Customer -> uc3; Customer -> uc4; Customer -> uc5;
+  Restaurant -> uc6; Restaurant -> uc7; "Delivery Agent" -> uc8; "Delivery Agent" -> uc9;
+  Administrator -> uc6; Administrator -> uc1;
+}

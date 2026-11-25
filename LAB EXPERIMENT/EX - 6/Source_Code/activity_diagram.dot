@@ -1,0 +1,6 @@
+digraph Act { rankdir=TB; node [fontname="DejaVu Sans",fontsize=10,shape=box,style="rounded,filled",fillcolor="#e8f5e9"]; edge [fontname="DejaVu Sans",fontsize=9];
+  st [label="",shape=circle,width=0.25,style=filled,fillcolor=black]; en [label="",shape=doublecircle,width=0.25,style=filled,fillcolor=black];
+  a1 [label="Browse Restaurants"]; a2 [label="Select Food Items"]; a3 [label="Place Order"]; a4 [label="Make Payment"];
+  d1 [label="Payment\nsuccessful?",shape=diamond,style=filled,fillcolor="#fff3cd"]; f [label="Show Payment Failed"];
+  a5 [label="Restaurant Confirms Order"]; a6 [label="Assign Delivery Agent"]; a7 [label="Track Delivery"]; a8 [label="Complete Order"];
+  st->a1->a2->a3->a4->d1; d1->f [label="No"]; f->a4 [label="retry"]; d1->a5 [label="Yes"]; a5->a6->a7->a8->en; }
