@@ -1,0 +1,178 @@
+EXPERIMENT NUMBER : 15
+EXPERIMENT TITLE  : WORKING WITH GIT BRANCHES AND RESOLVING MERGE CONFLICTS
+TOOLS USED        : Git/GitHub      COURSE OUTCOME: CO3
+
+PROBLEM STATEMENT
+Demonstrate how to work with Git branches and resolve merge conflicts when collaborating
+with others.
+Tasks:
+● Clone a shared repository to your local machine.
+● Create a new branch and switch to it.
+● Make changes to a file (e.g., update a README or modify code in a specific function).
+● Commit your changes.
+● Push the changes to the remote repository.
+● Before merging, pull the latest changes from the main branch.
+● Switch back to your feature branch.
+● Merge the main branch into your feature branch.
+● If there are conflicts, resolve them manually by editing the conflicting files. After resolving
+   conflicts, mark the conflicts as resolved.
+● Commit the resolved merge.
+● Push your feature branch with the merged changes to GitHub and create a pull request.
+● Submit a summary of the steps you performed, the conflicts you encountered, and how you
+   resolved them.
+
+AIM
+To work with Git branches while collaborating, merge the main branch into a feature branch,
+resolve merge conflicts manually, and push the result to GitHub with a pull request.
+
+SOFTWARE REQUIREMENTS
+● Git (Git Bash)
+● GitHub
+● Visual Studio Code
+
+PROCEDURE
+Step 1: Clone the Shared Repository
+● Open Git Bash or the terminal on the local machine.
+● Copy the HTTPS URL of the shared GitHub repository.
+● Clone the repository using the following command:
+ git clone <repository_url>
+● Navigate into the cloned repository:
+ cd <repository_name>
+● Verify the repository files using:
+ ls
+Step 2: Create and Switch to a New Branch
+● Create a new feature branch using:
+ git checkout -b feature-update
+● Verify the current branch:
+ git branch
+Step 3: Make Changes to a File
+● Open the repository in Visual Studio Code:
+ code .
+● Open a file such as README.md.
+● Add or modify a small section of content.
+● Save the file using Ctrl + S.
+Step 4: Check and Commit the Changes
+● Check the modified files:
+ git status
+● Stage the modified file:
+ git add README.md
+● Commit the changes:
+ git commit -m "Updated README"
+Step 5: Push the Feature Branch
+● Push the feature branch to GitHub:
+ git push -u origin feature-update
+● Verify that the feature branch has been successfully pushed to the remote repository.
+Step 6: Switch to the Main Branch
+● Switch from the feature branch to the main branch:
+ git checkout main
+● Verify the current branch:
+ git branch
+Step 7: Pull the Latest Changes from the Main Branch
+● Get the latest changes from GitHub:
+ git pull origin main
+● Wait for the pull operation to complete successfully.
+Step 8: Switch Back to the Feature Branch
+● Switch back to the feature branch:
+ git checkout feature-update
+● Verify the current branch:
+ git branch
+Step 9: Merge the Main Branch into the Feature Branch
+● Merge the latest main branch changes into the feature branch:
+ git merge main
+● If there are no conflicts, the merge will complete automatically.
+● If a conflict occurs, Git will display the conflicting files.
+Step 10: Resolve the Merge Conflict
+● Open the conflicting file in Visual Studio Code.
+● Locate the conflict markers:
+ <<<<<<< HEAD
+ Your feature branch changes
+ =======
+ Changes from main branch
+ >>>>>>> main
+● Decide which changes should be kept or combine both changes.
+● Remove the conflict markers:
+ <<<<<<< HEAD
+ =======
+ >>>>>>> main
+● Save the file.
+● Check the conflict status:
+ git status
+Step 11: Mark the Conflict as Resolved and Commit
+● Stage the resolved file:
+ git add <conflicted_file>
+● Commit the resolved merge:
+ git commit -m "Resolved merge conflict"
+● Verify that the working tree is clean:
+ git status
+Step 12: Push the Merged Feature Branch
+● Push the updated feature branch to GitHub:
+ git push origin feature-update
+● Open the GitHub repository.
+● Create a Pull Request from feature-update to main.
+● Enter a suitable title and description.
+● Click Create pull request.
+Step 13: Verify the Pull Request
+● Open the created Pull Request on GitHub.
+● Verify that the feature branch contains the merged changes.
+● Check the Files changed section to verify the final changes.
+
+SOURCE CODE (files in Source_Code/)
+
+----- merge_conflict_demo.sh -----
+#!/usr/bin/env bash
+# Experiment 15 - branches and resolving a merge conflict
+# Runs the whole workflow on your machine. A local bare repository (origin.git) plays the role of GitHub,
+# so no account or internet is needed. For the REAL GitHub steps follow the Procedure in Experiment_Details.txt.
+set -e
+W=$(mktemp -d); cd "$W"
+export GIT_AUTHOR_NAME="Student" GIT_AUTHOR_EMAIL="student@example.com" GIT_COMMITTER_NAME="Student" GIT_COMMITTER_EMAIL="student@example.com"
+export GIT_MERGE_AUTOEDIT=no GIT_EDITOR=true
+git config --global init.defaultBranch main 2>/dev/null || true
+git init -q --bare -b main origin.git
+git clone -q origin.git seed 2>/dev/null; cd seed; git checkout -q -b main 2>/dev/null || true
+printf '# My-Personal-Project\n\nInitial README created on GitHub.\n' > README.md
+git add README.md; git commit -q -m "Initial commit"; git push -q origin main; cd ..; rm -rf seed
+show() { echo; local s="\$"; for a in "$@"; do case "$a" in *\ *) s="$s '$a'";; *) s="$s $a";; esac; done; echo "$s"; "$@" 2>&1; }
+
+show git clone origin.git work
+cd work
+show git checkout -b feature-update
+sed -i '3s/.*/Line updated on feature-update branch./' README.md
+show git add README.md
+show git commit -m "Updated README"
+show git push -u origin feature-update
+# meanwhile a teammate changes the SAME line on main
+cd ..; git clone -q origin.git mate; cd mate
+sed -i '3s/.*/Line updated on main by a teammate./' README.md
+git commit -q -am "Teammate edit on main"; git push -q origin main; cd ../work
+show git checkout main
+show git pull origin main
+show git checkout feature-update
+show git merge main || true
+show git status --short
+echo; echo "--- README.md with conflict markers ---"; cat README.md
+printf '# My-Personal-Project\n\nLine updated on main by a teammate and on feature-update (merged).\n' > README.md
+echo; echo "--- conflict resolved manually ---"; cat README.md
+show git add README.md
+show git commit -m "Resolved merge conflict"
+show git push origin feature-update
+show git log --oneline --graph
+
+echo; echo "Workspace: $W"
+
+
+EXPECTED OUTPUT
+● Feature branch feature-update created and pushed.
+● Merging main into feature-update shows CONFLICT (content): Merge conflict in
+   README.md.
+● Conflict resolved, committed as “Resolved merge conflict”, pushed, and a pull request
+   created from feature-update to main.
+
+OUTPUT SCREENSHOTS GENERATED
+  Output_01.png - Git workflow output (part 1 of 3) [Real output captured from an actual run in the build sandbox (local bare repository stands in for GitHub)]
+  Output_02.png - Git workflow output (part 2 of 3) [Real output captured from an actual run in the build sandbox (local bare repository stands in for GitHub)]
+  Output_03.png - Git workflow output (part 3 of 3) [Real output captured from an actual run in the build sandbox (local bare repository stands in for GitHub)]
+
+RESULT
+Thus Git branches were used for collaboration, the merge conflict between the feature and main
+branches was resolved manually, and the merged feature branch was pushed with a pull request.
