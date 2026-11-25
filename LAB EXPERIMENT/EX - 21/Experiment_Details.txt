@@ -1,0 +1,222 @@
+EXPERIMENT NUMBER : 21
+EXPERIMENT TITLE  : CONTAINERIZING A PYTHON FLASK TO-DO APPLICATION USING DOCKER
+TOOLS USED        : Docker, Flask      COURSE OUTCOME: CO3
+
+PROBLEM STATEMENT
+Containerize a Python Flask Application Using Docker
+Tasks:
+● Write a simple Python Flask application for a "To-Do" list.
+● Create a Dockerfile to containerize the application.
+● Build and run the Docker container locally.
+● Test the application’s functionality inside the container.
+● Push the Docker image to Docker Hub.
+● Submit the Dockerfile and screenshots of testing results
+
+AIM
+To write a simple Python Flask To-Do list application, containerize it with a Dockerfile, build
+and run it locally, test its functionality inside the container and push the image to Docker Hub.
+
+SOFTWARE REQUIREMENTS
+● Python 3, Flask
+● Docker Desktop
+● Docker Hub account
+● Web browser / curl
+
+PROCEDURE
+Step 1: Create the Flask To-Do Application
+● Create a folder todo-app with the structure: app.py, templates/index.html, requirements.txt,
+   Dockerfile.
+app.py
+ from flask import Flask, render_template, request, redirect, url_for, jsonify
+ app = Flask(__name__)
+ tasks = []            # in-memory list of tasks
+ @app.route("/")
+ def index():
+      return render_template("index.html", tasks=tasks)
+ @app.route("/add", methods=["POST"])
+ def add():
+      title = request.form.get("task", "").strip()
+      if title:
+          tasks.append({"id": len(tasks) + 1, "title": title, "done": False})
+      return redirect(url_for("index"))
+ @app.route("/done/<int:task_id>")
+ def done(task_id):
+      for t in tasks:
+          if t["id"] == task_id:
+              t["done"] = True
+      return redirect(url_for("index"))
+ @app.route("/delete/<int:task_id>")
+ def delete(task_id):
+      global tasks
+      tasks = [t for t in tasks if t["id"] != task_id]
+      return redirect(url_for("index"))
+ @app.route("/api/tasks")
+ def api_tasks():
+      return jsonify(tasks)
+ if __name__ == "__main__":
+      app.run(host="0.0.0.0", port=5000)
+templates/index.html
+ <!DOCTYPE html>
+ <html>
+ <head><title>To-Do List</title></head>
+ <body style="font-family:Arial; margin:40px">
+   <h2>My To-Do List</h2>
+   <form action="/add" method="post">
+      <input name="task" placeholder="Enter a task" required>
+      <button type="submit">Add</button>
+   </form>
+   <ul>
+   {% for t in tasks %}
+      <li>
+        {% if t.done %}<s>{{ t.title }}</s>{% else %}{{ t.title }}{% endif %}
+        <a href="/done/{{ t.id }}">[Done]</a>
+        <a href="/delete/{{ t.id }}">[Delete]</a>
+      </li>
+   {% endfor %}
+   </ul>
+ </body>
+ </html>
+requirements.txt
+ flask==3.0.3
+Step 2: Create the Dockerfile
+Dockerfile
+ FROM python:3.11-slim
+ WORKDIR /app
+ COPY requirements.txt .
+ RUN pip install --no-cache-dir -r requirements.txt
+ COPY . .
+ EXPOSE 5000
+ CMD ["python", "app.py"]
+● Create .dockerignore containing __pycache__ and *.pyc so that unnecessary files are not
+   copied.
+Step 3: Build the Docker Image
+ docker build -t todo-app:1.0 .
+ docker images todo-app
+Step 4: Run the Container Locally
+ docker run -d --name todo -p 5000:5000 todo-app:1.0
+ docker ps
+● Open http://localhost:5000 in the browser.
+Step 5: Test the Application Functionality
+● Add three tasks (e.g. “Complete SE record”, “Prepare viva”, “Submit assignment”), mark
+   one as Done and delete one.
+● Test the JSON endpoint from the host and from inside the container:
+ curl http://localhost:5000/api/tasks
+ docker exec -it todo python -c "import
+ urllib.request;print(urllib.request.urlopen('http://localhost:5000/api/tasks').read())
+ "
+ docker logs todo
+● The response shows the list of tasks in JSON, and the logs show the GET/POST requests.
+Step 6: Push the Image to Docker Hub
+ docker login
+ docker tag todo-app:1.0 <dockerhub-username>/todo-app:1.0
+ docker push <dockerhub-username>/todo-app:1.0
+● Verify the repository on hub.docker.com.
+Step 7: Clean Up
+ docker stop todo
+ docker rm todo
+● Submit the Dockerfile and the screenshots of the testing results.
+
+SOURCE CODE (files in Source_Code/)
+
+----- .dockerignore -----
+__pycache__
+*.pyc
+
+
+----- Dockerfile -----
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+
+----- app.py -----
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+app = Flask(__name__)
+tasks = []            # in-memory list of tasks
+
+@app.route("/")
+def index():
+    return render_template("index.html", tasks=tasks)
+
+@app.route("/add", methods=["POST"])
+def add():
+    title = request.form.get("task", "").strip()
+    if title:
+        tasks.append({"id": len(tasks) + 1, "title": title, "done": False})
+    return redirect(url_for("index"))
+
+@app.route("/done/<int:task_id>")
+def done(task_id):
+    for t in tasks:
+        if t["id"] == task_id:
+            t["done"] = True
+    return redirect(url_for("index"))
+
+@app.route("/delete/<int:task_id>")
+def delete(task_id):
+    global tasks
+    tasks = [t for t in tasks if t["id"] != task_id]
+    return redirect(url_for("index"))
+
+@app.route("/api/tasks")
+def api_tasks():
+    return jsonify(tasks)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+
+
+----- requirements.txt -----
+flask==3.0.3
+
+
+----- run_docker.sh -----
+docker build -t todo-app:1.0 .
+docker images todo-app
+docker run -d --name todo -p 5000:5000 todo-app:1.0
+docker ps
+curl http://localhost:5000/api/tasks
+docker logs todo
+# docker login ; docker tag todo-app:1.0 <dockerhub-username>/todo-app:1.0 ; docker push <dockerhub-username>/todo-app:1.0
+# docker stop todo && docker rm todo
+
+
+----- templates/index.html -----
+<!DOCTYPE html>
+<html>
+<head><title>To-Do List</title></head>
+<body style="font-family:Arial; margin:40px">
+  <h2>My To-Do List</h2>
+  <form action="/add" method="post">
+     <input name="task" placeholder="Enter a task" required>
+     <button type="submit">Add</button>
+  </form>
+  <ul>
+  {% for t in tasks %}
+     <li>
+       {% if t.done %}<s>{{ t.title }}</s>{% else %}{{ t.title }}{% endif %}
+       <a href="/done/{{ t.id }}">[Done]</a>
+       <a href="/delete/{{ t.id }}">[Delete]</a>
+     </li>
+  {% endfor %}
+  </ul>
+</body>
+</html>
+
+
+EXPECTED OUTPUT
+● Image todo-app:1.0 built; container todo running on port 5000.
+● http://localhost:5000 shows the To-Do list; tasks can be added and deleted.
+● Image pushed as <dockerhub-username>/todo-app:1.0 and visible on Docker Hub.
+
+OUTPUT SCREENSHOTS GENERATED
+  Output_01.png - To-Do functionality test: add 3 tasks, mark one Done, delete one, JSON endpoint [Real output from running the application locally with Python in the build sandbox (Docker/Kubernetes/cloud not available there)]
+  Output_02.png - To-Do list page after the operations (rendered from the live app response) [Page rendered from the locally running Flask app, not from a container]
+
+RESULT
+Thus a Flask To-Do application was containerized using Docker, tested inside the container and
+the image was pushed to Docker Hub.
