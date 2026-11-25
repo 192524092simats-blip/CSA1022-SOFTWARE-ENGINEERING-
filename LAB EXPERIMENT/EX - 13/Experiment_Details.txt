@@ -1,0 +1,96 @@
+EXPERIMENT NUMBER : 13
+EXPERIMENT TITLE  : PRIORITIZING ONLINE LEARNING PLATFORM REQUIREMENTS USING MOSCOW AND KANO IN JIRA
+TOOLS USED        : Jira      COURSE OUTCOME: CO2
+
+PROBLEM STATEMENT
+You are tasked with developing an Online Learning Platform. The platform should include the
+following functionalities: Course Enrollment and Registration Video Lecture Streaming
+Interactive Quizzes and Assignments Progress Tracking Dashboard Peer-to-Peer Discussion
+Forums Certificate Generation Use Jira to categorize and prioritize these requirements using
+MoSCoW and Kano techniques.
+
+AIM
+To categorize and prioritize the functional requirements of an Online Learning Platform in Jira
+using the MoSCoW and Kano techniques.
+
+SOFTWARE REQUIREMENTS
+● Jira Software (Cloud) – Scrum project
+● Web browser
+
+PROCEDURE
+Step 1: Login
+● Open a web browser and navigate to the Jira website.
+● Login - https://id.atlassian.com/login
+● Sign in to your Jira account using your registered email address and password.
+Step 2: Create a New Project
+● Click Create Project.
+● Select Scrum
+● Enter the project name as Online Learning Platform.
+● Choose Team-managed.
+● Click Create.
+Step 3: Open the Backlog
+● Select the Online Learning Platform project.
+● Click the Backlog tab.
+● Create a new sprint if one is not already available.
+Step 4: Create the Project Requirements as Tasks
+● Create the following six tasks:
+● Course Enrollment and Registration
+● Video Lecture Streaming
+● Interactive Quizzes and Assignments
+● Progress Tracking Dashboard
+● Peer-to-Peer Discussion Forums
+● Certificate Generation
+Step 5: Add Tasks to the Sprint
+● Drag all six tasks into Sprint 1.
+● Verify that all tasks are added to the sprint.
+Step 6: Start the Sprint
+● Click Start Sprint.
+● Set the sprint duration to 1 Week.
+● Click Start.
+Step 7: Prioritize Requirements Using the MoSCoW Model
+● Open each task and add a label for its MoSCoW priority (e.g. MoSCoW-Must,
+   MoSCoW-Should, MoSCoW-Could).
+   Requirement                                 MoSCoW Priority
+   Course Enrollment and Registration          Must Have
+   Video Lecture Streaming                     Must Have
+   Interactive Quizzes and Assignments         Should Have
+   Progress Tracking Dashboard                 Should Have
+   Peer-to-Peer Discussion Forums              Could Have
+   Certificate Generation                      Could Have
+● Save each task.
+Step 8: Categorize Requirements Using the Kano Model
+● Add another label to each task based on the Kano model.
+   Requirement                                 Kano
+   Course Enrollment and Registration          Basic
+   Video Lecture Streaming                     Performance
+   Interactive Quizzes and Assignments         Performance
+   Progress Tracking Dashboard                 Performance
+   Peer-to-Peer Discussion Forums              Excitement
+   Certificate Generation                      Excitement
+Step 9: Verify the Prioritization
+● Open each task and verify that both the Kano labels are correctly assigned.
+● Ensure all six tasks are displayed in the Sprint Board.
+
+SOURCE CODE (files in Source_Code/)
+
+----- online_learning_requirements.csv -----
+Summary,Issue Type,Labels,Labels,Sprint
+Course Enrollment and Registration,Task,MoSCoW-Must,Kano-Basic,Sprint 1
+Video Lecture Streaming,Task,MoSCoW-Must,Kano-Performance,Sprint 1
+Interactive Quizzes and Assignments,Task,MoSCoW-Should,Kano-Performance,Sprint 1
+Progress Tracking Dashboard,Task,MoSCoW-Should,Kano-Performance,Sprint 1
+Peer-to-Peer Discussion Forums,Task,MoSCoW-Could,Kano-Excitement,Sprint 1
+Certificate Generation,Task,MoSCoW-Could,Kano-Excitement,Sprint 1
+
+
+EXPECTED OUTPUT
+● Scrum project “Online Learning Platform” with six requirement tasks in Sprint 1.
+● Each task labelled with its MoSCoW and Kano category as in the table above.
+● Sprint board displaying all six tasks with their labels.
+
+OUTPUT SCREENSHOTS GENERATED
+  (none generated - see Output_Screenshots/CAPTURE_CHECKLIST.md)
+
+RESULT
+Thus the requirements of the Online Learning Platform were created in Jira and categorized and
+prioritized using the MoSCoW and Kano techniques.
