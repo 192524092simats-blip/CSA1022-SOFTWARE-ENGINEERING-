@@ -1,0 +1,110 @@
+EXPERIMENT NUMBER : 25
+EXPERIMENT TITLE  : CREATING A GITHUB REPOSITORY AND PUSHING A README FILE
+TOOLS USED        : Git/GitHub      COURSE OUTCOME: CO3
+
+PROBLEM STATEMENT
+Create a new GitHub repository for a personal project. Initialize the repository with a
+README.md file. Then, clone the repository to your local machine, make some changes to the
+README.md (e.g., add a project description), and push the changes back to GitHub.
+Tasks:
+● Create a GitHub repository.
+● Clone the repository to your local machine.
+● Edit the README.md file.
+● Stage, commit, and push your changes to GitHub.
+
+AIM
+To create a new GitHub repository for a personal project, clone it, add a project description to
+the README.md file, and commit and push the changes to GitHub.
+
+SOFTWARE REQUIREMENTS
+● Git (Git Bash)
+● GitHub account
+● Visual Studio Code
+
+PROCEDURE
+Step 1: Create a GitHub Repository
+● Open the GitHub website and sign in to your GitHub account.
+● Click New Repository and enter a suitable repository name.
+● Select the repository visibility as Public or Private.
+● Enable the Add a README.md file option.
+● Click Create Repository to create the new repository.
+Step 2: Clone the Repository to the Local Machine
+● Open the newly created repository on GitHub.
+● Click the Code button and copy the HTTPS repository URL.
+● Open Git Bash and clone the repository using the following command:
+ git clone https://github.com/username/My-Personal-Project.git
+● Move into the repository folder using:
+ cd My-Personal-Project
+Step 3: Open and Edit the README File
+● Open the project folder in Visual Studio Code using: code .
+● Open the README.md file.
+● Add a brief description of the project, including its purpose and features.
+● Save the modified file.
+Step 4: Check the Repository Status
+● Verify the modified files using the following command:
+ git status
+● Ensure that the README.md file is displayed as modified.
+Step 5: Stage the Changes
+● Add the modified README file to the staging area using:
+ git add README.md
+● Verify that the file has been staged successfully by executing:
+ git status
+Step 6: Commit the Changes
+● Commit the staged changes with a meaningful commit message using:
+ git commit -m "Updated README with project description"
+● Verify that the commit has been created successfully.
+Step 7: Push the Changes to GitHub
+● Upload the committed changes to the remote GitHub repository using:
+ git push origin main
+● Wait until the push operation completes successfully.
+Step 8: Verify the Repository
+● Refresh the GitHub repository page.
+● Verify that the updated README.md file is displayed.
+
+SOURCE CODE (files in Source_Code/)
+
+----- create_repo_push_readme_demo.sh -----
+#!/usr/bin/env bash
+# Experiment 25 - clone, edit README, commit, push
+# Runs the whole workflow on your machine. A local bare repository (origin.git) plays the role of GitHub,
+# so no account or internet is needed. For the REAL GitHub steps follow the Procedure in Experiment_Details.txt.
+set -e
+W=$(mktemp -d); cd "$W"
+export GIT_AUTHOR_NAME="Student" GIT_AUTHOR_EMAIL="student@example.com" GIT_COMMITTER_NAME="Student" GIT_COMMITTER_EMAIL="student@example.com"
+export GIT_MERGE_AUTOEDIT=no GIT_EDITOR=true
+git config --global init.defaultBranch main 2>/dev/null || true
+git init -q --bare -b main origin.git
+git clone -q origin.git seed 2>/dev/null; cd seed; git checkout -q -b main 2>/dev/null || true
+printf '# My-Personal-Project\n\nInitial README created on GitHub.\n' > README.md
+git add README.md; git commit -q -m "Initial commit"; git push -q origin main; cd ..; rm -rf seed
+show() { echo; local s="\$"; for a in "$@"; do case "$a" in *\ *) s="$s '$a'";; *) s="$s $a";; esac; done; echo "$s"; "$@" 2>&1; }
+
+show git clone origin.git My-Personal-Project
+cd My-Personal-Project
+cat >> README.md <<'MD'
+
+## Project Description
+This is my personal project created for the CSA10 Software Engineering lab.
+MD
+show git status
+show git add README.md
+show git status
+show git commit -m "Updated README with project description"
+show git push origin main
+show git log --oneline
+
+echo; echo "Workspace: $W"
+
+
+EXPECTED OUTPUT
+● Repository My-Personal-Project created on GitHub with a README.
+● git commit shows “1 file changed” and git push shows main -> main.
+● The GitHub page displays the updated README with the project description.
+
+OUTPUT SCREENSHOTS GENERATED
+  Output_01.png - Git workflow output (part 1 of 2) [Real output captured from an actual run in the build sandbox (local bare repository stands in for GitHub)]
+  Output_02.png - Git workflow output (part 2 of 2) [Real output captured from an actual run in the build sandbox (local bare repository stands in for GitHub)]
+
+RESULT
+Thus a new GitHub repository was created, the README file was updated with the project
+description, and the changes were committed and pushed to GitHub successfully.
