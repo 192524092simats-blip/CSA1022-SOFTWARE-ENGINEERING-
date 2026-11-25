@@ -1,0 +1,118 @@
+EXPERIMENT NUMBER : 22
+EXPERIMENT TITLE  : PUSH AND PULL DOCKER IMAGES USING DOCKER HUB
+TOOLS USED        : Docker Hub, Docker CLI      COURSE OUTCOME: CO3
+
+PROBLEM STATEMENT
+Push and Pull Docker Images Using Docker Hub
+Tasks:
+● Create a Docker image for a static HTML website.
+● Tag and push the image to Docker Hub.
+● Pull the image from Docker Hub and run it on another machine.
+● Submit Docker commands and screenshots for each step.
+
+AIM
+To create a Docker image for a static HTML website, tag and push it to Docker Hub, then pull
+the image on another machine and run it.
+
+SOFTWARE REQUIREMENTS
+● Docker Engine / Docker Desktop
+● Docker CLI
+● Docker Hub account
+● Second machine or Play with Docker (labs.play-with-docker.com)
+
+PROCEDURE
+Step 1: Create the Static Website
+● Create a folder web-image with an index.html file:
+index.html
+ <!DOCTYPE html>
+ <html>
+ <head><title>Docker Hub Demo</title></head>
+ <body style="font-family:Arial;text-align:center;margin-top:80px">
+    <h1>Hello from Docker Hub!</h1>
+    <p>This image was pushed to and pulled from Docker Hub.</p>
+ </body>
+ </html>
+Dockerfile
+ FROM nginx:alpine
+ COPY index.html /usr/share/nginx/html/index.html
+ EXPOSE 80
+Step 2: Build the Docker Image
+ docker build -t static-web .
+ docker images
+Step 3: Create a Repository on Docker Hub
+● Sign in to hub.docker.com → Repositories → Create repository → name static-web →
+   Public → Create.
+Step 4: Log in from the Docker CLI
+ docker login -u <dockerhub-username>
+ # enter the access token as password
+ # Login Succeeded
+Step 5: Tag the Image
+● Tag the local image with the Docker Hub username, repository name and version:
+ docker tag static-web <dockerhub-username>/static-web:1.0
+ docker tag static-web <dockerhub-username>/static-web:latest
+ docker images
+● Both tags point to the same IMAGE ID.
+Step 6: Push the Image to Docker Hub
+ docker push <dockerhub-username>/static-web:1.0
+ docker push <dockerhub-username>/static-web:latest
+● Refresh the repository page on Docker Hub – tags 1.0 and latest are listed.
+Step 7: Pull the Image on Another Machine
+● On a second computer with Docker (or open https://labs.play-with-docker.com → Add new
+   instance), run:
+ docker pull <dockerhub-username>/static-web:1.0
+ docker images
+● (On the same machine you can simulate this by first removing the local copy: docker rmi
+   <dockerhub-username>/static-web:1.0 static-web)
+Step 8: Run the Pulled Image
+ docker run -d --name web -p 8080:80 <dockerhub-username>/static-web:1.0
+ docker ps
+ curl http://localhost:8080
+● Open http://<machine-ip>:8080 (or the 8080 port link in Play with Docker) – the page
+   “Hello from Docker Hub!” is displayed.
+
+SOURCE CODE (files in Source_Code/)
+
+----- Dockerfile -----
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/index.html
+EXPOSE 80
+
+
+----- docker_hub_commands.sh -----
+#!/usr/bin/env bash
+# usage: ./docker_hub_commands.sh <dockerhub-username>
+U=${1:?usage: ./docker_hub_commands.sh <dockerhub-username>}
+docker build -t static-web . && docker images
+docker login -u $U                       # use an access token as the password
+docker tag static-web $U/static-web:1.0
+docker tag static-web $U/static-web:latest
+docker push $U/static-web:1.0 && docker push $U/static-web:latest
+# --- on the second machine / Play with Docker ---
+# docker pull $U/static-web:1.0
+# docker run -d --name web -p 8080:80 $U/static-web:1.0 && curl http://localhost:8080
+
+
+----- index.html -----
+<!DOCTYPE html>
+<html>
+<head><title>Docker Hub Demo</title></head>
+<body style="font-family:Arial;text-align:center;margin-top:80px">
+   <h1>Hello from Docker Hub!</h1>
+   <p>This image was pushed to and pulled from Docker Hub.</p>
+</body>
+</html>
+
+
+EXPECTED OUTPUT
+● Image <dockerhub-username>/static-web:1.0 visible in the Docker Hub repository with its
+   tag and size.
+● On the second machine docker pull downloads the image and docker run -d -p 8080:80 starts
+   it.
+● The website opens on port 8080 of the second machine.
+
+OUTPUT SCREENSHOTS GENERATED
+  Output_01.png - Website page as served by the container (rendered from index.html) [Page rendered from index.html with a headless renderer, NOT from a running container]
+
+RESULT
+Thus a Docker image of a static website was built, tagged and pushed to Docker Hub, and then
+pulled and run successfully on another machine.
