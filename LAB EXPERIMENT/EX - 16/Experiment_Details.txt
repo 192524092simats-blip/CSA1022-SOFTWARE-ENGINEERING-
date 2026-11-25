@@ -1,0 +1,161 @@
+EXPERIMENT NUMBER : 16
+EXPERIMENT TITLE  : STATIC WEBSITE CONTAINERIZED AND SERVED WITH DOCKER AND NGINX
+TOOLS USED        : Docker      COURSE OUTCOME: CO3
+
+PROBLEM STATEMENT
+Create a Static Website and Containerize, Build & Serve it using Docker.
+Tasks:
+● Create a Simple Static Website (index.html file) with basic HTML content.
+● Write/create a Dockerfile to serve the website using Nginx.
+● Build the Docker Image
+● Run the container:
+● Access the Website using a Browser
+
+AIM
+To create a simple static website, write a Dockerfile that serves it with Nginx, build the Docker
+image, run the container and access the website from a browser.
+
+SOFTWARE REQUIREMENTS
+● Docker Desktop / Docker Engine
+● Visual Studio Code
+● Web browser
+
+PROCEDURE
+Step 1: Install and Verify Docker
+● Install Docker Desktop (Windows/macOS) or Docker Engine (Linux) and start it.
+● Open a terminal / PowerShell and verify the installation:
+ docker --version
+ docker run hello-world
+● The message “Hello from Docker!” confirms that Docker is working.
+Step 2: Create the Project Folder
+● Create a folder for the website and open it in VS Code:
+ mkdir static-site
+ cd static-site
+ code .
+Step 3: Create the Static Website (index.html)
+● Create a file named index.html with the following content:
+index.html
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <title>My Static Website</title>
+    <link rel="stylesheet" href="style.css">
+ </head>
+ <body>
+    <header><h1>Welcome to My Static Website</h1></header>
+    <main>
+      <p>This page is served by an Nginx container built with Docker.</p>
+      <ul>
+        <li>Course: CSA10 - Software Engineering</li>
+        <li>Experiment: Static Website with Docker</li>
+      </ul>
+    </main>
+ </body>
+ </html>
+● Create style.css for basic styling:
+style.css
+ body     { font-family: Arial, sans-serif; margin: 0; background: #f4f6f9; }
+ header { background: #1f3864; color: #fff; padding: 20px; text-align: center; }
+ main     { padding: 30px; }
+ footer { text-align: center; padding: 10px; color: #555; }
+Step 4: Write the Dockerfile
+● In the same folder create a file named Dockerfile (no extension):
+Dockerfile
+ # Use the lightweight official Nginx image
+ FROM nginx:alpine
+ # Remove the default Nginx page
+ RUN rm -rf /usr/share/nginx/html/*
+ # Copy website files into the Nginx web root
+ COPY index.html style.css /usr/share/nginx/html/
+ # Nginx listens on port 80
+ EXPOSE 80
+ # Start Nginx in the foreground
+ CMD ["nginx", "-g", "daemon off;"]
+● Project structure: static-site/ → index.html, style.css, Dockerfile.
+Step 5: Build the Docker Image
+● Build the image and tag it as static-site:1.0 (the dot means the current folder is the build
+   context):
+ docker build -t static-site:1.0 .
+ docker images
+● Verify that static-site with tag 1.0 is listed.
+Step 6: Run the Container
+● Run the container in detached mode and map host port 8080 to container port 80:
+ docker run -d --name mysite -p 8080:80 static-site:1.0
+ docker ps
+● docker ps should show the container mysite with PORTS 0.0.0.0:8080->80/tcp.
+Step 7: Access the Website in a Browser
+● Open a browser and go to http://localhost:8080
+● The page “Welcome to My Static Website” is displayed.
+Step 8: Update, Stop and Clean Up
+● To change the website, edit index.html, rebuild the image (tag 1.1) and run a new container.
+● Stop and remove the container when finished:
+ docker logs mysite
+ docker stop mysite
+ docker rm mysite
+
+SOURCE CODE (files in Source_Code/)
+
+----- Dockerfile -----
+# Use the lightweight official Nginx image
+FROM nginx:alpine
+# Remove the default Nginx page
+RUN rm -rf /usr/share/nginx/html/*
+# Copy website files into the Nginx web root
+COPY index.html style.css /usr/share/nginx/html/
+# Nginx listens on port 80
+EXPOSE 80
+# Start Nginx in the foreground
+CMD ["nginx", "-g", "daemon off;"]
+
+
+----- index.html -----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>My Static Website</title>
+   <link rel="stylesheet" href="style.css">
+</head>
+<body>
+   <header><h1>Welcome to My Static Website</h1></header>
+   <main>
+     <p>This page is served by an Nginx container built with Docker.</p>
+     <ul>
+       <li>Course: CSA10 - Software Engineering</li>
+       <li>Experiment: Static Website with Docker</li>
+     </ul>
+   </main>
+</body>
+</html>
+
+
+----- run_docker.sh -----
+docker --version
+docker run hello-world
+docker build -t static-site:1.0 .
+docker images
+docker run -d --name mysite -p 8080:80 static-site:1.0
+docker ps
+# open http://localhost:8080
+# clean up: docker stop mysite && docker rm mysite
+
+
+----- style.css -----
+body   { font-family: Arial, sans-serif; margin: 0; background: #f4f6f9; }
+header { background: #1f3864; color: #fff; padding: 20px; text-align: center; }
+main   { padding: 30px; }
+footer { text-align: center; padding: 10px; color: #555; }
+
+
+EXPECTED OUTPUT
+● Image static-site:1.0 is built successfully.
+● docker ps shows the container running with 0.0.0.0:8080->80/tcp.
+● http://localhost:8080 displays the “Welcome to My Static Website” page.
+
+OUTPUT SCREENSHOTS GENERATED
+  Output_01.png - Website page as served by the container (rendered from index.html) [Page rendered from index.html with a headless renderer, NOT from a running container]
+
+RESULT
+Thus a static website was created, containerized with a Dockerfile using Nginx, built into an
+image, run as a container and accessed successfully in a browser.
