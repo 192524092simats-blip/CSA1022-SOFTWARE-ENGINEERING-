@@ -1,0 +1,180 @@
+EXPERIMENT NUMBER : 20
+EXPERIMENT TITLE  : TEAM PROJECT REPOSITORY WITH BRANCHES, PULL REQUESTS AND README DOCUMENTATION
+TOOLS USED        : Git/GitHub      COURSE OUTCOME: CO3
+
+PROBLEM STATEMENT
+Create a GitHub Repository and Implement Version Control
+Tasks:
+● Set up a repository for a team project.
+● Create branches for individual modules.
+● Merge branches with pull requests after code reviews.
+● Resolve conflicts during branch merging.
+● Document the workflow using the README file.
+● Submit the repository link
+
+AIM
+To set up a GitHub repository for a team project, create branches for individual modules, merge
+them using pull requests after code review, resolve merge conflicts and document the workflow
+in the README file.
+
+SOFTWARE REQUIREMENTS
+● Git
+● GitHub (organization or shared repository)
+● Visual Studio Code
+
+PROCEDURE
+Step 1: Create the Team Repository
+● The team lead signs in to GitHub → New repository → name team-project → Public → tick
+   Add a README file → Create repository.
+● Open Settings → Collaborators → Add people and invite every team member; each member
+   accepts the invitation.
+● (Optional) Settings → Branches → Add branch protection rule for main → Require a pull
+   request before merging → Require 1 approval.
+Step 2: Clone the Repository (each member)
+ git clone https://github.com/<team-lead>/team-project.git
+ cd team-project
+ git branch -a
+Step 3: Create Branches for Individual Modules
+● Each member creates a branch for the module assigned to them:
+ git checkout -b feature-login             # Student 1
+ git checkout -b feature-catalog           # Student 2
+ git checkout -b feature-cart              # Student 3
+Step 4: Develop the Module and Push the Branch
+● Example for Student 1 – create login.py:
+login.py
+  def login(username, password):
+       users = {"admin": "admin123", "student": "pass123"}
+       if users.get(username) == password:
+           return "Login successful"
+       return "Invalid credentials"
+ git add login.py
+ git commit -m "Add login module"
+ git push -u origin feature-login
+● Students 2 and 3 do the same for catalog.py and cart.py on their branches.
+Step 5: Open Pull Requests and Review Code
+● On GitHub click Compare & pull request for each branch → base: main, compare:
+   feature-xxx.
+● Add a title and description and assign another team member as Reviewer.
+● The reviewer opens Files changed, adds comments and selects Approve (or Request
+   changes).
+● If changes are requested, the author commits again on the same branch; the PR updates
+   automatically.
+Step 6: Merge the Pull Requests
+● After approval click Merge pull request → Confirm merge, and then Delete branch.
+● Merge feature-login first, then feature-catalog.
+Step 7: Create and Resolve a Merge Conflict
+● Two members edit the same line of README.md on their branches (for example the
+   “Modules” line).
+● After the first PR is merged, the second PR shows “This branch has conflicts that must be
+   resolved”.
+● Resolve it locally:
+ git checkout feature-cart
+ git pull origin main
+ # README.md now contains:
+ <<<<<<< HEAD
+ Modules: Login, Cart
+ =======
+ Modules: Login, Catalog
+ >>>>>>> main
+● Edit the file to keep both changes (Modules: Login, Catalog, Cart), remove the markers,
+   then:
+ git add README.md
+ git commit -m "Resolve README merge conflict"
+ git push
+● The PR now shows “No conflicts”; review and merge it.
+Step 8: Document the Workflow in README
+● Update README.md on a docs branch and merge it through a PR:
+README.md
+ # Team Project - Online Shopping Modules
+ ## Team
+ | Member     | Module | Branch          |
+ |-----------|---------|-----------------|
+ | Student 1 | Login   | feature-login   |
+ | Student 2 | Catalog | feature-catalog |
+ | Student 3 | Cart    | feature-cart    |
+ ## Workflow
+ 1. Pull the latest main: `git pull origin main`
+ 2. Create a branch: `git checkout -b feature-<module>`
+ 3. Commit small, meaningful changes and push the branch
+ 4. Open a Pull Request to `main` and request a review
+ 5. Resolve conflicts locally, then merge after approval
+ ## How to run
+ python login.py
+Step 9: Submit the Repository Link
+● Verify the commit graph in Insights → Network and copy the repository URL
+   https://github.com/<team-lead>/team-project for submission.
+
+SOURCE CODE (files in Source_Code/)
+
+----- team_project_demo.sh -----
+#!/usr/bin/env bash
+# Experiment 20 - team project: branches, PRs, conflict resolution
+# Runs the whole workflow on your machine. A local bare repository (origin.git) plays the role of GitHub,
+# so no account or internet is needed. For the REAL GitHub steps follow the Procedure in Experiment_Details.txt.
+set -e
+W=$(mktemp -d); cd "$W"
+export GIT_AUTHOR_NAME="Student" GIT_AUTHOR_EMAIL="student@example.com" GIT_COMMITTER_NAME="Student" GIT_COMMITTER_EMAIL="student@example.com"
+export GIT_MERGE_AUTOEDIT=no GIT_EDITOR=true
+git config --global init.defaultBranch main 2>/dev/null || true
+git init -q --bare -b main origin.git
+git clone -q origin.git seed 2>/dev/null; cd seed; git checkout -q -b main 2>/dev/null || true
+printf '# My-Personal-Project\n\nInitial README created on GitHub.\n' > README.md
+git add README.md; git commit -q -m "Initial commit"; git push -q origin main; cd ..; rm -rf seed
+show() { echo; local s="\$"; for a in "$@"; do case "$a" in *\ *) s="$s '$a'";; *) s="$s $a";; esac; done; echo "$s"; "$@" 2>&1; }
+
+git clone -q origin.git team-project; cd team-project
+show git branch -a
+for b in feature-login feature-catalog feature-cart; do git checkout -q -b $b main; done
+git checkout -q feature-login
+cat > login.py <<'PY'
+def login(username, password):
+    users = {"admin": "admin123", "student": "pass123"}
+    if users.get(username) == password:
+        return "Login successful"
+    return "Invalid credentials"
+
+if __name__ == "__main__":
+    print(login("admin", "admin123"))
+PY
+echo "- Login module (feature-login)" >> README.md
+git add login.py README.md; git commit -q -m "Add login module"; show git push -u origin feature-login
+git checkout -q feature-catalog
+printf 'def catalog():\n    return ["Book", "Pen", "Bag"]\n\nif __name__ == "__main__":\n    print(catalog())\n' > catalog.py
+echo "- Catalog module (feature-catalog)" >> README.md
+git add catalog.py README.md; git commit -q -m "Add catalog module"; git push -q -u origin feature-catalog
+git checkout -q feature-cart
+printf 'def cart_total(prices):\n    return sum(prices)\n\nif __name__ == "__main__":\n    print(cart_total([10, 20, 30]))\n' > cart.py
+echo "- Cart module (feature-cart)" >> README.md
+git add cart.py README.md; git commit -q -m "Add cart module"; git push -q -u origin feature-cart
+# pull requests reviewed and merged into main one after another
+git checkout -q main
+show git merge --no-ff -m "Merge PR: feature-login (approved)" feature-login
+show git merge --no-ff -m "Merge PR: feature-catalog (approved)" feature-catalog || true
+echo "--- conflict in README.md resolved by keeping both lines ---"
+printf '# My-Personal-Project\n\nInitial README created on GitHub.\n- Login module (feature-login)\n- Catalog module (feature-catalog)\n' > README.md
+git add README.md; show git commit -m "Resolve README merge conflict"
+show git merge --no-ff -m "Merge PR: feature-cart (approved)" feature-cart || true
+printf '# My-Personal-Project\n\nInitial README created on GitHub.\n- Login module (feature-login)\n- Catalog module (feature-catalog)\n- Cart module (feature-cart)\n' > README.md
+git add README.md; show git commit -m "Resolve README merge conflict (cart)"
+git push -q origin main
+show git branch -a
+show git log --oneline --graph
+show python3 login.py
+
+echo; echo "Workspace: $W"
+
+
+EXPECTED OUTPUT
+● Repository team-project with branches main, feature-login, feature-catalog and feature-cart.
+● Pull requests reviewed (approved) and merged; one conflict in README.md resolved.
+● README.md documents the project, branch strategy and workflow; repository link
+   submitted.
+
+OUTPUT SCREENSHOTS GENERATED
+  Output_01.png - Git workflow output (part 1 of 2) [Real output captured from an actual run in the build sandbox (local bare repository stands in for GitHub)]
+  Output_02.png - Git workflow output (part 2 of 2) [Real output captured from an actual run in the build sandbox (local bare repository stands in for GitHub)]
+
+RESULT
+Thus a team GitHub repository was set up, modules were developed on separate branches,
+merged through reviewed pull requests, conflicts were resolved and the workflow was
+documented in the README.
